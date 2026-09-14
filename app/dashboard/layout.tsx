@@ -9,7 +9,10 @@ function DashboardLayout({ children, }: { children: React.ReactNode }) {
        <AppSidebar /> 
        <div className="flex flex-1 flex-col">
             <AppHeader />
-            {children} </div>
+             <div className="p-5">
+              {children}
+             </div>
+       </div>
     </SidebarProvider>
   )
 }
