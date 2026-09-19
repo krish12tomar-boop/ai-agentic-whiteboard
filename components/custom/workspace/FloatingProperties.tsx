@@ -267,7 +267,7 @@ function FloatingProperties ({
                                      <Palette size={18} />
                                      <span className="absolute-bottom-[4px] left-1/2 h-0.75 w-4 -translate-x-1/2 rounded-full" 
                                      style={{
-                                          backgroundColor: selectedElement.strokecolor || "#1e1e1e",
+                                          backgroundColor: selectedElement.strokeColor || "#1e1e1e",
                                      }}
                                 />     
                                 </div>
@@ -647,7 +647,7 @@ function FloatingProperties ({
                            selectedElement.fontFamily === 1
                        }
                        onClick={() => 
-                           onPropertyChange?.("font family", 1)
+                           onPropertyChange?.("fontFamily", 1)
                        }
                    >
                       Hand
@@ -658,7 +658,7 @@ function FloatingProperties ({
                            selectedElement.fontFamily === 2
                        }
                        onClick={() => 
-                           onPropertyChange?.("font family", 2)
+                           onPropertyChange?.("fontFamily", 2)
                        }
                    >
                       Normal
@@ -669,7 +669,7 @@ function FloatingProperties ({
                            selectedElement.fontFamily === 3
                        }
                        onClick={() => 
-                           onPropertyChange?.("font family", 3)
+                           onPropertyChange?.("fontFamily", 3)
                        }
                    >
                       Mono
@@ -745,7 +745,7 @@ function FloatingProperties ({
                               }
                               onClick={() => 
                                   onPropertyChange?.(
-                                      "TextAlign",
+                                      "textAlign",
                                       "left"
                                   )
                               }
@@ -760,7 +760,7 @@ function FloatingProperties ({
                               }
                               onClick={() => 
                                   onPropertyChange?.(
-                                      "TextAlign",
+                                      "textAlign",
                                       "center"
                                   )
                               }
@@ -775,7 +775,7 @@ function FloatingProperties ({
                               }
                               onClick={() => 
                                   onPropertyChange?.(
-                                      "TextAlign",
+                                      "textAlign",
                                       "right"
                                   )
                               }
