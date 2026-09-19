@@ -10,7 +10,6 @@ import { ArrowRight, Circle, Diamond, Eraser, Hand, Image, Minus, MousePointer2,
 import { ItemContent } from '@/components/ui/item';
 import { ExcalidrawImperativeAPI } from '@excalidraw/excalidraw/types';
 import FloatingProperties from './FloatingProperties';
-import { version } from 'os';
 const tools = [
     {
         name: "selection",
@@ -142,21 +141,21 @@ function Whiteboard() {
     const scrollX =
        canvasState.scrollX ?? 0
        
-    const srollY =
+    const scrollY =
        canvasState.scrollY ?? 0
-       
-       
+        
+        
     // Center of selected elemnt
     const centerX =
         selectedElement.x +
         selectedElement.width / 2
-        
-        
+         
+         
     // Convert Excalidraw coordinates
     // into browser coordinates
     const screenX =
         (centerX + scrollX) * zoom
-        
+         
     const sceenY =
         (selectedElement.y + scrollY) *
         zoom
@@ -170,7 +169,7 @@ function Whiteboard() {
 
   const handlePropertyChange = (property : string, value: any) => {
      if(!excalidrawAPI || !selectedElement) return ;
-
+ 
      const element = excalidrawAPI.getSceneElements();
      const updatedElement = element.map((element) => {
          if(element.id != selectedElement.id) {
@@ -183,11 +182,33 @@ function Whiteboard() {
              updated: Date.now()
          }
       });
-
+ 
       excalidrawAPI.updateScene({
          elements: updatedElement
       })
+ 
+   }
 
+   const handleLockElement = () => {
+     if (!excalidrawAPI || !selectedElement) return;
+
+     const elements = excalidrawAPI.getSceneElements();
+     const updatedElements = elements.map((element) => {
+         if (element.id !== selectedElement.id) {
+             return element;
+         }
+
+         return {
+             ...element,
+             locked: !element.locked,
+             version: element.version + 1,
+             updated: Date.now()
+         }
+     });
+
+     excalidrawAPI.updateScene({
+         elements: updatedElements
+     })
    }
 
   const handleDeleteElement = () => {
@@ -303,6 +324,7 @@ function Whiteboard() {
        <FloatingProperties 
            selectedElement={selectedElement}
            position={floatingPosition}
+           onLock={handleLockElement}
            onPropertyChange={(property, value) => handlePropertyChange(property, value)}
            onDelete={() => handleDeleteElement()}
            onDuplicate={() => handleOnDuplicate()}

@@ -256,23 +256,25 @@ function FloatingProperties ({
 
                {/* Stroke color also acts as text color for Excalidraw text elements. */}
                {!isImage && (
-                 
+                  
                   <Popover>
-
-                       <PopoverTrigger>
-                           <ToolbarButton
-                               title={ isText? "Text color": "stroke color" }
-                            >
-                                <div className="relative">
-                                     <Palette size={18} />
-                                     <span className="absolute-bottom-[4px] left-1/2 h-0.75 w-4 -translate-x-1/2 rounded-full" 
-                                     style={{
-                                          backgroundColor: selectedElement.strokeColor || "#1e1e1e",
-                                     }}
-                                />     
-                                </div>
-                                </ToolbarButton>   
-                       </PopoverTrigger>
+ 
+                       <PopoverTrigger
+                           render={
+                               <ToolbarButton
+                                   title={ isText? "Text color": "stroke color" }
+                               >
+                                   <div className="relative">
+                                       <Palette size={18} />
+                                       <span className="absolute-bottom-[4px] left-1/2 h-0.75 w-4 -translate-x-1/2 rounded-full" 
+                                       style={{
+                                           backgroundColor: selectedElement.strokeColor || "#1e1e1e",
+                                       }}
+                                   />     
+                                   </div>
+                               </ToolbarButton>
+                           }
+                       />
 
                        <PopoverContent 
                             side="bottom"
@@ -305,19 +307,21 @@ function FloatingProperties ({
                {/* Fill controls are only meaningful for closed shapes. */}
                {isShape && (
                    <Popover>
-                        <PopoverTrigger>
-                              <ToolbarButton title="Fill color">
-                                  <div className="relative">
-                                      <Droplet size={18} />
-                                      <span 
-                                         className="absolute -bottom-1 left-1/2 h-0.75 w-4 -translate-x-1/2 rounded-full border border-slate-200"
-                                         style={{ 
-                                             backgroundColor: selectedElement.backgroundColor === "transparent" ? "#ffffff" : selectedElement.backgroundColor || "#ffffff",
-                                         }}
-                                      />
-                                  </div>
-                              </ToolbarButton>
-                        </PopoverTrigger>
+                        <PopoverTrigger
+                            render={
+                                <ToolbarButton title="Fill color">
+                                    <div className="relative">
+                                        <Droplet size={18} />
+                                        <span 
+                                           className="absolute -bottom-1 left-1/2 h-0.75 w-4 -translate-x-1/2 rounded-full border border-slate-200"
+                                           style={{ 
+                                               backgroundColor: selectedElement.backgroundColor === "transparent" ? "#ffffff" : selectedElement.backgroundColor || "#ffffff",
+                                           }}
+                                        />
+                                    </div>
+                                </ToolbarButton>
+                            }
+                        />
 
                         <PopoverContent side="bottom"
                                         align="center"
@@ -356,17 +360,19 @@ function FloatingProperties ({
                {/* Alignment controls appear only when editing text. */}
                {isText && (
                     <Popover>
-                          <PopoverTrigger>
-                              <ToolbarButton title="Alignment" >
-                                  {selectedElement.textAlign === "center"? (
-                                      <AlignCenter size={18} />
-                                  ) : selectedElement.textAlign === "right" ? (
-                                      <AlignRight size={18} />
-                                  ) : ( 
-                                      <AlignLeft size={18} />
-                                )}
-                              </ToolbarButton>
-                          </PopoverTrigger>
+                          <PopoverTrigger
+                              render={
+                                  <ToolbarButton title="Alignment" >
+                                      {selectedElement.textAlign === "center"? (
+                                          <AlignCenter size={18} />
+                                      ) : selectedElement.textAlign === "right" ? (
+                                          <AlignRight size={18} />
+                                      ) : ( 
+                                          <AlignLeft size={18} />
+                                        )}
+                                  </ToolbarButton>
+                              }
+                          />
 
                           <PopoverContent side="bottom"
                                           align="center"
@@ -413,13 +419,15 @@ function FloatingProperties ({
 
                {(isLinear || isFreeDraw) && (
                   <Popover>
-                     <PopoverTrigger>
-                         <ToolbarButton title="Stroke width">
-                              <Minus  size={19}
-                                      strokeWidth={2.5}
-                              />
-                         </ToolbarButton>
-                     </PopoverTrigger>
+                     <PopoverTrigger
+                         render={
+                             <ToolbarButton title="Stroke width">
+                                 <Minus  size={19}
+                                         strokeWidth={2.5}
+                                 />
+                             </ToolbarButton>
+                         }
+                     />
 
                      <PopoverContent 
                           side="bottom"
@@ -628,6 +636,11 @@ function FloatingProperties ({
                       icon={<ArrowUpToLine size={16} />}
                       label="Bring front"
                       onClick= {onBringToFront}
+                  />
+                  <QuickAction 
+                      icon={<ArrowDownToLine size={16} />}
+                      label="Send back"
+                      onClick= {onSendToBack}
                   />
               </div>
            </div>
@@ -1153,8 +1166,8 @@ function FloatingProperties ({
                     type="button"
                     onClick={() =>
                         onPropertyChange?.(
-                            "shapeMode",
-                            "Sharp"
+                            "roughness",
+                            0
                         )
                     }
                     className={`flex h-8 items-center justify-center rounded-lg border text-xs font-medium transition
@@ -1169,12 +1182,12 @@ function FloatingProperties ({
                     type="button"
                     onClick={() =>
                         onPropertyChange?.(
-                            "shapeMode",
-                            "drawn"
+                            "roughness",
+                            1
                         )
                     }
                     className={`flex h-8 items-center justify-center rounded-lg border text-xs font-medium transition
-                     ${isSharpShape ? "border-blue-500 bg-blue-50 text-blue-700"
+                     ${!isSharpShape ? "border-blue-500 bg-blue-50 text-blue-700"
                      : "border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50" }
                     `}
                  >
