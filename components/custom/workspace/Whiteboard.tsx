@@ -6,10 +6,12 @@ import axios from 'axios';
 import { useParams } from 'next/navigation';
 import { toast } from '@/components/ui/toast';
 import './whiteboard.css'
-import { ArrowRight, Circle, Diamond, Eraser, Hand, Image, Minus, MousePointer2, Pencil, Square, Type } from 'lucide-react';
+import { ArrowRight, Circle, Diamond, Eraser, Hand, Image, Minus, MousePointer2, Pencil, Sparkles, Square, Type } from 'lucide-react';
 import { ItemContent } from '@/components/ui/item';
 import { ExcalidrawImperativeAPI } from '@excalidraw/excalidraw/types';
 import FloatingProperties from './FloatingProperties';
+import { Button } from '@/components/ui/button';
+import AIFloatingSidebar from './AIFloatingSidebar';
 const tools = [
     {
         name: "selection",
@@ -69,13 +71,19 @@ const tools = [
 
 ]
 
-function Whiteboard() {
+ type Props =  {
+    onApiReady: (api: ExcalidrawImperativeAPI) => void;
+}
+
+
+function Whiteboard({ onApiReady }: Props) {
   const [excalidrawAPI, setExcalidrawAPI] = useState <ExcalidrawImperativeAPI|null> (null);
   const saveTimeRef = useRef<any>(null);
   const { projectid } = useParams();
   const [ activeTool, setActiveTool ] = useState('selection');
   const [selectedElement, setSelectedElement] = useState <any> (null);
   const [canvasState, setCanvasState] = useState <any> (null);
+  const [ShowAiSidebar, setShowAiSidebar] = useState (true);
 
   const handleCanvasChange = (elements: readonly any[], appState: any, files: any) => {
 
@@ -298,8 +306,14 @@ function Whiteboard() {
     <div style={{ height: "90vh" }}>
       <Excalidraw 
             // @ts-ignore
-            excalidrawAPI={(api)=> setExcalidrawAPI(api)}
+            excalidrawAPI={(api) => { setExcalidrawAPI(api); onApiReady(api); }}
             onChange={handleCanvasChange} 
+            initialData={{
+                  appState: {
+                     currentItemRoughness: 0
+                  }
+            }}
+            
        />
        <div
        className='absolute left-4 top-1/2 z-50 -translate-y-1/2
@@ -331,6 +345,20 @@ function Whiteboard() {
            onBringToFront={() => handleBringFrontBack("front")}
            onSendToBack={() => handleBringFrontBack("back")}
        />
+
+       <div className="absolute right-15 bottom-13 z-50">
+           <Button size={"lg"} onClick={() => setShowAiSidebar(!ShowAiSidebar)}>
+               <Sparkles /> AI
+           </Button>
+       </div>
+
+    {ShowAiSidebar && (
+        <AIFloatingSidebar
+            excalidrawApi={excalidrawAPI as any}
+            onClose={() => setShowAiSidebar(false)}
+        />
+    )}
+
     </div>
   );
 }
