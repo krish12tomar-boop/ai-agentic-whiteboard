@@ -6,11 +6,13 @@ import React from 'react'
 function DashboardLayout({ children, }: { children: React.ReactNode }) {
     return (
         <SidebarProvider>
-           <AppSidebar />   
-           <div className = "flex flex-1 flex-col">
-               <AppHeader />
-               {children}
-           </div>
+            <AppSidebar />
+            <div className="flex flex-1 flex-col">
+                <AppHeader />
+                <div className = "p-5">
+                    {children}
+                </div>
+            </div>
         </SidebarProvider>
     )
 }
