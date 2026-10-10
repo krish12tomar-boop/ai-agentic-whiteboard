@@ -13,7 +13,7 @@ export const projects = pgTable("projects", {
   id: serial("id").primaryKey(),
   projectId: varchar("projectId").notNull().unique(),
   projectName: varchar("projectName").notNull(),
-  userEmail: varchar("userEmail").notNull(),
+  userId: varchar("userId").notNull(),
   createdAt: timestamp("created_at", { mode: "date", withTimezone: true }).defaultNow().notNull(),
 
 });

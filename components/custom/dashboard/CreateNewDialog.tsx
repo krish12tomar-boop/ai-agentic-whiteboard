@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import {
     Dialog,
     DialogContent,
-    DialogDescription,
     DialogFooter,
     DialogHeader,
     DialogTitle,
@@ -22,7 +21,8 @@ function CreateNewBoardDialog() {
     const [dialog, setDialog] = useState(false);
     const route = useRouter();
     const handleCreateBoard = async () => {
-        if (workspaceName.trim() === "" || workspaceName?.length > 30) {
+        const projectName = workspaceName.trim();
+        if (projectName === "" || projectName.length > 30) {
             toast.add({
                 type: "error",
                 title: "Invalid Workspace Name",
@@ -32,28 +32,33 @@ function CreateNewBoardDialog() {
             return;
         }
         setLoading(true);
-        const projectId = crypto.randomUUID();
-        const result = await axios.post("/api/projects", {
-            projectName: workspaceName,
-            projectId: projectId
-        });
-
-        console.log(result?.data);
-        toast.add({
-            type: "success",
-            title: "New Workspace Created",
-        });
-        setLoading(false);
-        setDialog(false);
-        route.push("/workspace/" + projectId)
+        try {
+            const projectId = crypto.randomUUID();
+            await axios.post("/api/projects", {
+                projectName,
+                projectId
+            });
+            toast.add({
+                type: "success",
+                title: "New Workspace Created",
+            });
+            setDialog(false);
+            route.push("/workspace/" + projectId);
+        } catch {
+            toast.add({
+                type: "error",
+                title: "Could not create workspace",
+                description: "Please try again."
+            });
+        } finally {
+            setLoading(false);
+        }
     }
 
     return (
         <Dialog open={dialog} onOpenChange={setDialog} >
-            <DialogTrigger>
-                <Button className="w-full" >
-                    <Plus /> Create New Board
-                </Button>
+            <DialogTrigger render={<Button className="w-full" />}>
+                <Plus /> Create New Board
             </DialogTrigger>
             <DialogContent>
                 <DialogHeader>
@@ -68,8 +73,8 @@ function CreateNewBoardDialog() {
                 </div>
 
                 <DialogFooter>
-                    <DialogClose>
-                        <Button variant="outline">Cancel</Button>
+                    <DialogClose render={<Button variant="outline" />}>
+                        Cancel
                     </DialogClose>
                     <Button
                         disabled={workspaceName?.length == 0 || loading}
